@@ -177,7 +177,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     uint32_t sensor_time = hcsr04_read();
-    dist  = sensor_time * .034/2;
+    dist  = sensor_time * .034;
     HAL_Delay(200);
   }
   /* USER CODE END 3 */
