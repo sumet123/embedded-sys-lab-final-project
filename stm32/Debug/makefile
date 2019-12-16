@@ -26,21 +26,21 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-FinalProject.elf \
+stm32.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-FinalProject.list \
+stm32.list \
 
 
 # All Target
-all: FinalProject.elf secondary-outputs
+all: stm32.elf secondary-outputs
 
 # Tool invocations
-FinalProject.elf: $(OBJS) $(USER_OBJS) /Users/itth/STM32CubeIDE/workspace_1.0.2/FinalProject/STM32F407VGTX_FLASH.ld
-	arm-none-eabi-gcc -o "FinalProject.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/itth/STM32CubeIDE/workspace_1.0.2/FinalProject/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FinalProject.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+stm32.elf: $(OBJS) $(USER_OBJS) /Users/itth/Desktop/embedded-sys-lab-final-project/stm32/STM32F407VGTX_FLASH.ld
+	arm-none-eabi-gcc -o "stm32.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/itth/Desktop/embedded-sys-lab-final-project/stm32/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -49,8 +49,8 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-FinalProject.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "FinalProject.list"
+stm32.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "stm32.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
