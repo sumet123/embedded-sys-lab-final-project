@@ -61,7 +61,13 @@ double dist = 0.0;
 int IC_Val1 = 0;
 int IC_Val2 = 0;
 int isFirstCap = 0;
-char pData[32];
+int pData[10];
+int cnt = 0;
+int c;
+int t = 200;
+char buf[3];
+char notify[] = "n";
+char notNotify[] = "m";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -182,12 +188,28 @@ int main(void)
     MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
-    //uint32_t sensor_time = hcsr04_read();
-    //dist  = sensor_time * .034;
-    HAL_Delay(200);
-    int i = sprintf(pData,"WORLD");
-    HAL_UART_Transmit(&huart2, pData, i, 1000);
-    HAL_Delay(500);
+    uint32_t sensor_time = hcsr04_read();
+    dist  = sensor_time * .034;
+    if (HAL_UART_Receive(&huart2, &buf, 3, 50) == HAL_OK){
+        sscanf(buf, "%d", &t);
+    }
+    pData[cnt] = (int)dist;
+    if(cnt == 9){
+    	cnt = -1;
+    	c = 0;
+    	for(int i = 0; i < 10; i++){
+    		if(pData[i] < t){
+    			c++;
+    		}
+    	}
+    	if(c > 1){
+    		HAL_UART_Transmit(&huart2, notify, 1, 50);
+    	}else{
+    		HAL_UART_Transmit(&huart2, notNotify, 1, 50);
+    	}
+    }
+    cnt++;
+    HAL_Delay(50);
   }
   /* USER CODE END 3 */
 }
