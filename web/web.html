@@ -6,30 +6,35 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
   <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
   <style type="text/css">
-    body{
+    body {
       background-color: #5B92AB;
     }
+
     .ui.horizontal.segments {
       margin-top: 0px;
       background-color: #0C2746;
-     
+
       width: 100%;
-      border-radius:0px;
+      border-radius: 0px;
     }
-    .ui.horizontal.segments > .segment{
+
+    .ui.horizontal.segments>.segment {
       border-width: 0;
-      
-    }
-    .ui.segment>.header {
-      padding-left: 50px;
-      color:white;
 
     }
+
+    .ui.segment>.header {
+      padding-left: 50px;
+      color: white;
+
+    }
+
     .ui.card {
       background-color: #BCD2E8;
-      
+
     }
-    .ui.cards > .card{
+
+    .ui.cards>.card {
       border-width: 0px;
     }
   </style>
@@ -49,39 +54,40 @@
       secret: SECRET,
       alias: ALIAS
     });
-    
+
     microgear.on('message', function (topic, msg) {
       console.log(msg);
 
     });
-    
+
 
     microgear.on('connected', function () {
       microgear.setAlias(ALIAS);
+      console.log("connected");
       document.getElementById("server").innerHTML = "online"
-      $("#server").css({"background-color": "#4CAF50"});
+      $("#server").css({ "background-color": "#4CAF50" });
 
       document.getElementById("status").innerHTML = "ofline"
-      $("#status").css({"background-color": "#f44336"});
+      $("#status").css({ "background-color": "#f44336" });
     });
 
     microgear.on('present', function (event) {
       console.log(event);
-      if(event.type == "online"){
+      if (event.type == "online" && event.alias ==thing1) {
         document.getElementById("status").innerHTML = "online"
-        $("#status").css({"background-color": "#4CAF50"});
+        $("#status").css({ "background-color": "#4CAF50" });
       }
-      else{
+      else if (event.type == "ofline" && event.alias ==thing1){
         document.getElementById("status").innerHTML = "ofline"
-        $("#status").css({"background-color": "#f44336"});
+        $("#status").css({ "background-color": "#f44336" });
       }
     });
 
     microgear.on('absent', function (event) {
       console.log(event);
-      
-    });
 
+    });
+    
     microgear.resettoken(function (err) {
       microgear.connect(APPID);
     });
@@ -97,18 +103,18 @@
             let dist = document.getElementById('dist').value;
             $('.ui.form').submit();
             if (!$('form').form('is valid')) {
-             
+
               return false;
             }
-            if(dist>10 && dist<100){
-              dist = "0"+dist;
+            if (dist > 10 && dist < 100) {
+              dist = "0" + dist;
             }
-            else if(dist>0 && dist<10){
-              dist = "00"+dist;
+            else if (dist > 0 && dist < 10) {
+              dist = "00" + dist;
             }
-            microgear.chat(thing1,linetok+","+dist);
+            microgear.chat(thing1, linetok + "," + dist);
             console.log(dist);
-            
+
           },
           onDeny: () => {
             $('.ui.form').trigger("reset");
@@ -131,8 +137,8 @@
             identifier: 'distance',
             rules: [
               {
-                type: 'integer[2..200]',
-                prompt: 'Please enter integer between 2-200'
+                type: 'integer[3..200]',
+                prompt: 'Please enter integer between 3-200'
               }
             ]
           }
@@ -142,13 +148,13 @@
   </script>
   <div class="ui horizontal segments">
     <div class="ui segment">
-        <h1 class="ui left aligned header">Embedded Project</h1>
+      <h1 class="ui left aligned header">Embedded Project</h1>
     </div>
     <div class="ui center aligned segment">
-        <h3 class="ui right aligned header" >Server Status : 
-            <div class="ui horizontal label" id="server"></div>
-        </h3>
-    </div> 
+      <h3 class="ui right aligned header">Server Status :
+        <div class="ui horizontal label" id="server"></div>
+      </h3>
+    </div>
   </div>
   <div class="ui container" id="b">
     <div class="ui four collumn centerd grid">
@@ -182,7 +188,7 @@
     <div class="header">Board1 > settings</div>
     <div class="content">
 
-      <form action="#"  class="ui form">
+      <form action="#" class="ui form">
         <div class="field">
           <label>Line Token</label>
           <input type="text" name="line" placeholder="Line Token" id="line">
