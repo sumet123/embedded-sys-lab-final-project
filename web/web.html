@@ -67,8 +67,8 @@
       document.getElementById("server").innerHTML = "online"
       $("#server").css({ "background-color": "#4CAF50" });
 
-      document.getElementById("status").innerHTML = "ofline"
-      $("#status").css({ "background-color": "#f44336" });
+      document.getElementById("status").innerHTML = "offline"
+      $("#status").css({ "background-color": "#DCDDDE" });
     });
 
     microgear.on('present', function (event) {
@@ -77,9 +77,9 @@
         document.getElementById("status").innerHTML = "online"
         $("#status").css({ "background-color": "#4CAF50" });
       }
-      else if (event.type == "ofline" && event.alias ==thing1){
+      else if (event.type == "offline" && event.alias ==thing1){
         document.getElementById("status").innerHTML = "ofline"
-        $("#status").css({ "background-color": "#f44336" });
+        $("#status").css({ "background-color": "#DCDDDE" });
       }
     });
 
@@ -152,7 +152,7 @@
     </div>
     <div class="ui center aligned segment">
       <h3 class="ui right aligned header">Server Status :
-        <div class="ui horizontal label" id="server"></div>
+        <div class="ui horizontal label" id="server">offline</div>
       </h3>
     </div>
   </div>
@@ -176,6 +176,7 @@
               <span class="date">Created in Dec 2019</span>
             </div>
             <div class="ui inverted divider"></div>
+                <nobr>Board status :</nobr>
             <div class="ui label" id="status"></div>
           </div>
         </div>
@@ -185,7 +186,7 @@
 
   </div>
   <div class="ui tiny modal">
-    <div class="header">Board1 > settings</div>
+    <div class="header">NodeMCU1 > settings</div>
     <div class="content">
 
       <form action="#" class="ui form">
