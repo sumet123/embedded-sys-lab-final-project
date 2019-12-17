@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <style type="text/css">
+    body{
+      background-color: #5B92AB;
+    }
+    .ui.horizontal.segments {
+      margin-top: 0px;
+      background-color: #0C2746;
+     
+      width: 100%;
+      border-radius:0px;
+    }
+    .ui.horizontal.segments > .segment{
+      border-width: 0;
+      
+    }
+    .ui.segment>.header {
+      padding-left: 50px;
+      color:white;
+
+    }
+    .ui.card {
+      background-color: #BCD2E8;
+      
+    }
+    .ui.cards > .card{
+      border-width: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://cdn.netpie.io/microgear.js"></script>
+  <script>
+    const APPID = "EmbeddedLabFinalProject";
+    const KEY = "2uK8b8wW1z5bIZr";
+    const SECRET = "oSmm6eS9iNBFXxHchiyVqHth6";
+
+    const ALIAS = "HTML_web";         //  ชื่อตัวเอง
+    const thing1 = "NodeMCU1";          //  ชื่อเพื่อนที่จะคุย
+    var microgear = Microgear.create({
+      key: KEY,
+      secret: SECRET,
+      alias: ALIAS
+    });
+    
+    microgear.on('message', function (topic, msg) {
+      console.log(msg);
+
+    });
+    
+
+    microgear.on('connected', function () {
+      microgear.setAlias(ALIAS);
+      document.getElementById("server").innerHTML = "online"
+      $("#server").css({"background-color": "#4CAF50"});
+
+      document.getElementById("status").innerHTML = "ofline"
+      $("#status").css({"background-color": "#f44336"});
+    });
+
+    microgear.on('present', function (event) {
+      console.log(event);
+      if(event.type == "online"){
+        document.getElementById("status").innerHTML = "online"
+        $("#status").css({"background-color": "#4CAF50"});
+      }
+      else{
+        document.getElementById("status").innerHTML = "ofline"
+        $("#status").css({"background-color": "#f44336"});
+      }
+    });
+
+    microgear.on('absent', function (event) {
+      console.log(event);
+      
+    });
+
+    microgear.resettoken(function (err) {
+      microgear.connect(APPID);
+    });
+    $(document).ready(function () {
+      document.getElementById("name").innerHTML = thing1
+      $('.ui.card .image').dimmer({
+        on: 'hover'
+      });
+      $('.button.view').on('click', (function () {
+        $('.ui.modal').modal({
+          onApprove: () => {
+            let linetok = document.getElementById('line').value;
+            let dist = document.getElementById('dist').value;
+            $('.ui.form').submit();
+            if (!$('form').form('is valid')) {
+             
+              return false;
+            }
+            if(dist>10 && dist<100){
+              dist = "0"+dist;
+            }
+            else if(dist>0 && dist<10){
+              dist = "00"+dist;
+            }
+            microgear.chat(thing1,linetok+","+dist);
+            console.log(dist);
+            
+          },
+          onDeny: () => {
+            $('.ui.form').trigger("reset");
+            $('.ui .error .message').trigger("reset");
+          }
+        }).modal('show');
+      }));
+      $('.ui.form').form({
+        fields: {
+          line: {
+            identifier: 'line',
+            rules: [
+              {
+                type: 'empty',
+                prompt: 'Please enter a value'
+              }
+            ]
+          },
+          dist: {
+            identifier: 'distance',
+            rules: [
+              {
+                type: 'integer[2..200]',
+                prompt: 'Please enter integer between 2-200'
+              }
+            ]
+          }
+        }
+      });
+    });
+  </script>
+  <div class="ui horizontal segments">
+    <div class="ui segment">
+        <h1 class="ui left aligned header">Embedded Project</h1>
+    </div>
+    <div class="ui center aligned segment">
+        <h3 class="ui right aligned header" >Server Status : 
+            <div class="ui horizontal label" id="server"></div>
+        </h3>
+    </div> 
+  </div>
+  <div class="ui container" id="b">
+    <div class="ui four collumn centerd grid">
+      <div class="four wide column">
+        <div class="ui card">
+          <div class="blurring dimmable image">
+            <div class="ui inverted dimmer">
+              <div class="content">
+                <div class="center">
+                  <div class="ui blue button view">Settings</div>
+                </div>
+              </div>
+            </div>
+            <img width="200" height="100" src="images/board.jpg">
+          </div>
+          <div class="content">
+            <a class="header" id="name"></a>
+            <div class="meta">
+              <span class="date">Created in Dec 2019</span>
+            </div>
+            <div class="ui inverted divider"></div>
+            <div class="ui label" id="status"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="ui tiny modal">
+    <div class="header">Board1 > settings</div>
+    <div class="content">
+
+      <form action="#"  class="ui form">
+        <div class="field">
+          <label>Line Token</label>
+          <input type="text" name="line" placeholder="Line Token" id="line">
+        </div>
+        <div class="field">
+          <label>Distance</label>
+          <input type="text" name="distance" placeholder="3-200 cm" id="dist">
+        </div>
+        <div class="ui error message"></div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui green ok button">Approve</div>
+      <div class="ui red cancel button">Cancel</div>
+    </div>
+  </div>
+
+</body>
+
+</html>
+<!--<div class="field">
+          <label>distance</label>
+          <div class="ui radio checkbox">
+            <input type="radio" name="throughput" checked="checked">
+            <label>50</label>
+          </div>
+          <div class="ui radio checkbox">
+              <input type="radio" name="throughput">
+              <label>100</label>
+            </div>
+            <div class="ui radio checkbox">
+                <input type="radio" name="throughput" >
+                <label>150</label>
+            </div>
+            <div class="ui radio checkbox">
+                <input type="radio" name="throughput" >
+                <label>200</label>
+              </div>
+        </div>-->
